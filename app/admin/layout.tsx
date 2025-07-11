@@ -1,8 +1,7 @@
-'use client';
-
 import { ReactNode } from 'react';
+import { redirect } from 'next/navigation';
+import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/components/ui/button';
 
@@ -14,13 +13,12 @@ const adminNavItems = [
   { href: '/admin/documents', label: 'Documents' },
 ];
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
-  const router = useRouter();
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const user = await currentUser();
 
-  const handleLogout = () => {
-    // Ici, adapte cette logique à ton système d’auth (ex: Clerk.signOut() ou supabase.auth.signOut())
-    router.push('/');
-  };
+  if (!user || user.publicMetadata.role !== 'admin') {
+    return redirect('/'); // Ou '/access-denied'
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -41,10 +39,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         {/* Topbar */}
         <header className="h-16 bg-white border-b flex items-center justify-between px-6 shadow-sm">
           <h2 className="text-xl font-semibold text-gray-800">Admin Panel</h2>
-          <Button variant="ghost" onClick={handleLogout} className="text-red-600 hover:text-red-700 flex items-center">
-            <ArrowRightOnRectangleIcon className="w-5 h-5 mr-1" />
-            Déconnexion
-          </Button>
+          <form action="/sign-out" method="post">
+            <Button
+              variant="ghost"
+              className="text-red-600 hover:text-red-700 flex items-center"
+              type="submit"
+            >
+              <ArrowRightOnRectangleIcon className="w-5 h-5 mr-1" />
+              Déconnexion
+            </Button>
+          </form>
         </header>
 
         {/* Page content */}

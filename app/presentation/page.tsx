@@ -426,7 +426,7 @@ export default function PresentationPage() {
             <div className="space-y-2 text-white/90">
               <p>📧 Email: eunicetsonoliss@gmail.com</p>
               <p>📱 Téléphone: +241 076 250 589 </p>
-              <p>🌐 Site: vercel.app</p>
+              <p>🌐 Site: https://mdm-nu.vercel.app/</p>
               <p>📍 Libreville, Gabon</p>
             </div>
           </div>
